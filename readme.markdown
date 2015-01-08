@@ -67,6 +67,20 @@ $ hpub -t "some title" -u http://exampleblog.com -x "some text"
 > News posted successfully!
 ```
 
+### CLI Usage
+
+```txt
+Usage:
+  hpub <options>
+
+Options:
+  -t, --title      | Title for the news item
+  -u, --url, --uri | URL to the news item
+  -x, --text       | Text describing the news item
+
+Note that you should use either an URL or the --text option.
+```
+
 # License
 
 MIT
