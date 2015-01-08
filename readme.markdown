@@ -5,7 +5,7 @@
 # Installation
 
 ```shell
-npm install --save hackerpub
+$ npm install --save hackerpub
 ```
 
 # Usage
@@ -51,10 +51,20 @@ When the requests against HN are done, the `done` callback will be invoked with 
 
 # CLI
 
-I'll only bother writing this if somebody really wants one! The idea is you would run it once to set up your credentials _(or write them to `~/.hackerpub` yourself)_, and then you would be able to run something like this in the command line.
+The CLI has a simple interface. You'll be asked for your credentials once, and they'll be stored at `~/.hpub`. You can edit that file directly, the CLI expects YAML.
 
 ```shell
-hackerpub "some title" http://exampleblog.com
+$ cat ~/.hpub
+```
+
+```yaml
+username: foo,
+password: foo
+```
+
+```shell
+$ hpub -t "some title" -u http://exampleblog.com -x "some text"
+> News posted successfully!
 ```
 
 # License

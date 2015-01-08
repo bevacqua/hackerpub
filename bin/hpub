@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var fs = require('fs');
+var prompt = require('prompt');
+var yaml = require('yamljs');
+var path = require('path');
+var rcfile = path.join(getUserHome(), '.hpub');
+var rc = {};
+
+if (fs.existsSync(rcfile)) {
+  rc = yaml.load(rcfile);
+  parse();
+} else {
+  console.log('Please enter your HackerNews credentials. You only need to do this once.');
+  prompt.start();
+  prompt.message = prompt.delimiter = '';
+  prompt.get({
+    properties: {
+      username: { description: 'Username: ', required: true },
+      password: { description: 'Password: ', required: true, hidden: true }
+    }
+  }, prompted);
+}
+
+function prompted (err, data) {
+  if (err) {
+    return;
+  }
+  fs.writeFileSync(rcfile, yaml.stringify(data, 2), 'utf8');
+  rc = data;
+  console.log('Your credentials have been stored at: %s\nYou can edit them anytime.', rcfile);
+  parse();
+}
+
+function parse () {
+  var argv = require('minimist')(process.argv.slice(2), {
+    title: ['t'],
+    url: ['u', 'uri'],
+    text: ['x']
+  });
+
+  var okay = 'title' in argv && ('url' in argv || 'text' in argv);
+  if (okay === false) {
+    usage(); return;
+  }
+
+  submit(argv);
+}
+
+function usage () {
+  console.log([
+    'Usage:',
+    '  hpub <options>',
+    '',
+    'Options:',
+    '  -t, --title      | Title for the news item',
+    '  -u, --url, --uri | URL to the news item',
+    '  -x, --text       | Text describing the news item',
+    '',
+    'Note that you should use either an URL or the --text option.'
+  ].join('\n'));
+}
+
+function submit (argv) {
+  var hackerpub = require('..');
+
+  hackerpub({
+    username: rc.username,
+    password: rc.password,
+    title: argv.title,
+    url: argv.url,
+    text: argv.text
+  }, done);
+}
+
+function done (err, res, body) {
+  if (err) {
+    console.error('Error! %s\n%s', err.message, err.stack);
+    process.exit(1);
+  } else {
+    console.log('News posted successfully!');
+    process.exit(0);
+  }
+}
+
+function getUserHome () {
+  var win = process.platform === 'win32';
+  return process.env[win ? 'USERPROFILE' : 'HOME'];
+}
