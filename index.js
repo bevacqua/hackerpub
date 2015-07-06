@@ -1,5 +1,6 @@
 'use strict';
 
+var util = require('util');
 var contra = require('contra');
 var request = require('request');
 var cheerio = require('cheerio');
@@ -16,13 +17,20 @@ function hackerpub (options, done) {
       go(jar, 'GET', '/submit', {}, next);
     },
     function act (res, body, next) {
-      go(jar, 'POST', '/r', { t: o.title, u: o.url, x: o.text, fnid: secret(body) }, next);
+      var data = {
+        title: o.title,
+        url: o.url,
+        text: o.text,
+        fnid: secret(body, 'fnid'),
+        fnop: secret(body, 'fnop')
+      };
+      go(jar, 'POST', '/r', data, next);
     }
   ], done);
 }
 
-function secret (html) {
-  return cheerio.load(html)('[name=fnid]').val();
+function secret (html, field) {
+  return cheerio.load(html)(util.format('[name=%s]', field)).val();
 }
 
 function parse (options) {
