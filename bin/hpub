@@ -36,11 +36,12 @@ function prompted (err, data) {
 
 function parse () {
   var argv = require('minimist')(process.argv.slice(2), {
-    title: ['t'],
-    url: ['u', 'uri'],
-    text: ['x']
+    alias: {
+      title: ['t'],
+      url: ['u', 'uri'],
+      text: ['x']
+    }
   });
-
   var okay = 'title' in argv && ('url' in argv || 'text' in argv);
   if (okay === false) {
     usage(); return;
