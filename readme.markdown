@@ -1,6 +1,6 @@
 # hackerpub
 
-> Post news to HackerNews
+> Post items to Hacker News
 
 # Installation
 
