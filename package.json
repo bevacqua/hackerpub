@@ -1,6 +1,6 @@
 {
   "name": "hackerpub",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Post news to HackerNews",
   "main": "index.js",
   "scripts": {
