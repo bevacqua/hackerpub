@@ -1,9 +1,11 @@
 'use strict';
 
+var url = require('url');
 var util = require('util');
 var contra = require('contra');
 var request = require('request');
 var cheerio = require('cheerio');
+var base = 'https://news.ycombinator.com';
 
 function hackerpub (options, done) {
   var o = parse(options);
@@ -25,6 +27,26 @@ function hackerpub (options, done) {
         fnop: secret(body, 'fnop')
       };
       go(jar, 'POST', '/r', data, next);
+    },
+    function grab (res, body, next) {
+      var $ = cheerio.load(body);
+      var relative = $('.athing a')
+        .filter(byUrl)
+        .parents('.athing')
+        .next()
+        .find('a')
+        .filter(byText)
+        .attr('href');
+      var absolute = url.resolve(base, relative);
+
+      next(null, res, body, absolute);
+
+      function byUrl () {
+        return $(this).attr('href') === o.url;
+      }
+      function byText () {
+        return $(this).text() === 'discuss';
+      }
     }
   ], done);
 }
@@ -55,7 +77,7 @@ function parse (options) {
 
 function go (jar, method, pathname, data, done) {
   request({
-    url: 'https://news.ycombinator.com' + pathname,
+    url: base + pathname,
     method: method,
     jar: jar,
     form: data,

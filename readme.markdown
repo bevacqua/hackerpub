@@ -22,7 +22,7 @@ hackerpub({
   url: 'http://exampleblog.com/articles/example-blog-article'
 }, done);
 
-function done (err, res, body) {
+function done (err, res, body, discuss) {
   // handle response
 }
 ```
@@ -43,11 +43,12 @@ Property   | Description
 
 Note that `url` and `text` are exclusive. If you include both, the `url` will take precedence and the `text` will be ignored.
 
-When the requests against HN are done, the `done` callback will be invoked with three arguments.
+When the requests against HN are done, the `done` callback will be invoked with four arguments.
 
 - `err` will have an error if one occurred, and `null` otherwise
 - `res` will be a response object
 - `body` will be the response body
+- `discuss` will be a link to the discussion on Hacker News
 
 # CLI
 
@@ -64,7 +65,7 @@ password: foo
 
 ```shell
 $ hpub -t "some title" -u http://exampleblog.com -x "some text"
-> News posted successfully!
+> https://news.ycombinator.com/item?id=$YOUR_HN_DISCUSSION
 ```
 
 ### CLI Usage

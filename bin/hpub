@@ -76,12 +76,12 @@ function submit (argv) {
   }, done);
 }
 
-function done (err, res, body) {
+function done (err, res, body, discuss) {
   if (err) {
     console.error('Error! %s\n%s', err.message, err.stack);
     process.exit(1);
   } else {
-    console.log('News posted successfully!');
+    console.log(discuss);
     process.exit(0);
   }
 }
