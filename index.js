@@ -37,7 +37,7 @@ function hackerpub (options, done) {
         .find('a')
         .filter(byText)
         .attr('href');
-      var absolute = url.resolve(base, relative);
+      var absolute = relative ? url.resolve(base, relative) : null;
 
       next(null, res, body, absolute);
 
