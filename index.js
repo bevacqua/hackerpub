@@ -35,7 +35,7 @@ function hackerpub (options, done) {
         .parents('.athing')
         .next()
         .find('a')
-        .filter(byText)
+        .filter(byItem)
         .attr('href');
       var absolute = relative ? url.resolve(base, relative) : null;
 
@@ -44,8 +44,11 @@ function hackerpub (options, done) {
       function byUrl () {
         return $(this).attr('href') === o.url;
       }
-      function byText () {
-        return $(this).text() === 'discuss';
+      function byItem () {
+        var href = $(this).attr('href');
+        var absolute = href ? url.resolve(base, href) : null;
+        var needle = url.resolve(base, '/item?id=');
+        return absolute.indexOf(needle) === 0;
       }
     }
   ], done);
